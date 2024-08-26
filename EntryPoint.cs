@@ -1,28 +1,17 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using Serilog;
-using System;
-using System.Threading.Tasks;
 
 namespace ConsoleTemplate;
 
-public class EntryPoint
+public class EntryPoint(ILogger<EntryPoint> logger, DatabaseContext context)
 {
-    private readonly ILogger<EntryPoint> _logger;
-    private readonly DatabaseContext context;
 
-    public EntryPoint(ILogger<EntryPoint> logger, DatabaseContext context)
+    public async Task ExecuteAsync(CancellationToken cancellationToken = default)
     {
-        _logger = logger;
-        this.context = context;
-    }
+        logger.LogInformation("Doing something");
 
-    public async Task ExecuteAsync(CancellationToken stoppingToken = default)
-    {
-        _logger.LogInformation("Doing something");
+        await context.Database.EnsureCreatedAsync(cancellationToken);
 
-        await context.Database.EnsureCreatedAsync();
-
-        context.BlogPosts.ToList();
+        await context.BlogPosts.ToListAsync(cancellationToken);
     }
 }

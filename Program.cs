@@ -5,11 +5,12 @@ using Microsoft.Extensions.Hosting;
 
 
 var host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services => 
+     .ConfigureServices((context, services) => 
             { 
                 services.AddDbContext<DatabaseContext>(opt => opt.UseSqlServer());
                 services.AddTransient<EntryPoint>(); 
-            }).Build();
+            })
+    .Build();
 
 var my = host.Services.GetRequiredService<EntryPoint>();
 await my.ExecuteAsync();

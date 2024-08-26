@@ -4,18 +4,12 @@ using Microsoft.Extensions.Configuration;
 
 namespace ConsoleTemplate;
 
-public class DatabaseContext : DbContext
+public class DatabaseContext(IConfiguration config) : DbContext
 {
-    private readonly IConfiguration config;
-
-    public DatabaseContext(IConfiguration config)
-    {
-        this.config = config;
-    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var connStr = this.config.GetConnectionString("Database");
+        var connStr = config.GetConnectionString("Database");
         optionsBuilder.UseSqlServer(connStr);
     }
 
